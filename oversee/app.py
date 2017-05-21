@@ -50,7 +50,7 @@ def layers(ctx):
     ctx.response.set_json(dict(layers=layers))
 
 
-@app.url('/api/layers/update/')
+@app.url('/api/layers/update/', method='POST')
 def update_layers(ctx):
     table = ctx.modules.db.table('layer')
     table.purge()
@@ -70,7 +70,7 @@ def screen_data(ctx):
     ctx.response.set_json(dict(screen=screen))
 
 
-@app.url('/api/screen/update/')
+@app.url('/api/screen/update/', method='POST')
 def update_screen(ctx):
     table = ctx.modules.db.table('screen')
     table.purge()

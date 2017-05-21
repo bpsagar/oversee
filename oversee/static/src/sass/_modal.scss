@@ -1,0 +1,28 @@
+.modal {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 1000;
+
+  .modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.6);
+    height: 100%;
+    width: 100%;
+  }
+
+  .modal-container {
+    background-color: #FFF;
+    border-radius: 4px;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.3);
+    left: 50%;
+    max-height: 90vh;
+    max-width: 80vw;
+    overflow: auto;
+    position: absolute;
+    top: 50%;
+    width: 500px;
+    @include transform(translateX(-50%) translateY(-50%));
+  }
+}

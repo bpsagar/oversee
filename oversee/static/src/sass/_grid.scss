@@ -1,0 +1,37 @@
+.grid-column {
+  float: left;
+  width: 50%;
+}
+
+.preview-wrapper {
+  padding: 2px;
+
+  .preview {
+    background-position: center;
+    background-size: cover;
+    padding: 35%;
+    position: relative;
+    width: 100%;
+
+    &:after {
+      background-color: rgba(0, 0, 0, 0.3);
+      bottom: 0;
+      color: #FFF;
+      content: attr(data-name);
+      font-size: $font-size-small;
+      font-weight: $font-weight-bold;
+      left: 0;
+      overflow: hidden;
+      padding: 5px 0;
+      position: absolute;
+      right: 0;
+      text-align: center;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
+.clearfix {
+  clear: both;
+}

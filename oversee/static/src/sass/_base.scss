@@ -1,7 +1,9 @@
+$font-family: 'Montserrat', sans-serif;
 $font-weight-light: 300;
 $font-weight-regular: 400;
 $font-weight-bold: 500;
 
+$font-size-small: 12px;
 $font-size-regular: 16px;
 $font-size-big: 22px;
 
@@ -10,9 +12,13 @@ $dark-gray-color: #565656;
 
 $primary-color: #7554E9;
 
+* {
+  font-family: $font-family;
+}
+
 body {
   background-color: #F3F3F3;
-  font-family: 'Montserrat', sans-serif;
+  font-family: $font-family;
   font-size: $font-size-regular;
   line-height: 1.5;
 }
