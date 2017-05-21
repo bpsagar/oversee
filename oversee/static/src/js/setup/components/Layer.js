@@ -26,12 +26,13 @@ class Layer extends React.Component {
 
   render = () => (
     <div className="card">
-      <div>Layer {this.props.number}</div>
-      <div>
-        <button className="button outline small" onClick={this.showAssetsBrowser}>Add Column</button>
-        <button className="button outline small" onClick={this.props.deleteLayer}>Delete Layer</button>
+      <div className="card-title">
+        Layer {this.props.number}
+        <div className="pull-right">
+          <button className="button outline small" onClick={this.props.deleteLayer}>Delete</button>
+        </div>
       </div>
-      <div>
+      <div className="card-content">
         {this.props.columns.map(column =>
           <div key={`${column.number}-${column.asset.name}`} className="grid-column">
             <Column
@@ -41,10 +42,15 @@ class Layer extends React.Component {
             />
           </div>
         )}
+        <div className="grid-column">
+          <div className="preview-wrapper">
+            <div className="preview button" onClick={this.showAssetsBrowser} data-name="Add Column"></div>
+          </div>
+        </div>
         <div className="clearfix"></div>
       </div>
       {this.state.showAssetsBrowser &&
-        <Modal onClose={this.hideAssetsBrowser}>
+        <Modal onClose={this.hideAssetsBrowser} title="Assets">
           <AssetBrowser onAssetClick={this.addColumn} />
         </Modal>
       }

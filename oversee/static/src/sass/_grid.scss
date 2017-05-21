@@ -3,12 +3,17 @@
   width: 50%;
 }
 
+.pull-right {
+  float: right;
+}
+
 .preview-wrapper {
   padding: 2px;
 
   .preview {
     background-position: center;
     background-size: cover;
+    border-radius: 4px;
     padding: 35%;
     position: relative;
     width: 100%;
@@ -30,6 +35,10 @@
       white-space: nowrap;
     }
   }
+}
+
+.vspacing {
+  margin-top: 15px;
 }
 
 .clearfix {

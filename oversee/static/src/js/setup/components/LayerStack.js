@@ -10,6 +10,7 @@ class LayerStack extends React.Component {
       <div>
         <button className="button block" onClick={this.props.addLayer}>Add Layer</button>
       </div>
+      <div className="vspacing"></div>
       {this.props.layers.slice(0).reverse().map(layer =>
         <Layer key={layer.number} {...layer} />
       )}

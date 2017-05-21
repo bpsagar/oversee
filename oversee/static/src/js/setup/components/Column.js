@@ -18,12 +18,13 @@ class Column extends React.Component {
 
   render = () => (
     <div>
-      <Asset {...this.props.asset} />
-      <button className="button small" onClick={this.showSettings}>Settings</button>
-      <button className="button outline small" onClick={this.props.delete}>Delete</button>
+      <div onClick={this.showSettings}>
+        <Asset {...this.props.asset} />
+      </div>
       {this.state.showSettings &&
         <ColumnSettings
           asset={this.props.asset}
+          delete={this.props.delete}
           hide={this.hideSettings}
           properties={this.props.properties}
           updateProperty={this.props.updateProperty}

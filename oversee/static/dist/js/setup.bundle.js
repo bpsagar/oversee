@@ -7914,7 +7914,16 @@ var Modal = function (_React$Component) {
         _react2.default.createElement(
           "div",
           { className: "modal-container" },
-          _this.props.children
+          _react2.default.createElement(
+            "div",
+            { className: "modal-title" },
+            _this.props.title
+          ),
+          _react2.default.createElement(
+            "div",
+            { className: "modal-content" },
+            _this.props.children
+          )
         )
       );
     }, _temp), _possibleConstructorReturn(_this, _ret);
@@ -13071,19 +13080,14 @@ var Column = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         null,
-        _react2.default.createElement(_Asset2.default, _this.props.asset),
         _react2.default.createElement(
-          'button',
-          { className: 'button small', onClick: _this.showSettings },
-          'Settings'
-        ),
-        _react2.default.createElement(
-          'button',
-          { className: 'button outline small', onClick: _this.props.delete },
-          'Delete'
+          'div',
+          { onClick: _this.showSettings },
+          _react2.default.createElement(_Asset2.default, _this.props.asset)
         ),
         _this.state.showSettings && _react2.default.createElement(_ColumnSettings2.default, {
           asset: _this.props.asset,
+          'delete': _this.props.delete,
           hide: _this.hideSettings,
           properties: _this.props.properties,
           updateProperty: _this.props.updateProperty
@@ -13147,34 +13151,44 @@ var ColumnSettings = function (_React$Component) {
     }, _this.render = function () {
       return _react2.default.createElement(
         _Modal2.default,
-        { onClose: _this.props.hide },
+        { onClose: _this.props.hide, title: 'Settings' },
+        _this.props.asset.type == 'image' && _react2.default.createElement(
+          'div',
+          null,
+          'No settings for images yet'
+        ),
+        _this.props.asset.type == 'video' && _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'label',
+            null,
+            _react2.default.createElement('input', {
+              type: 'checkbox',
+              checked: _this.props.properties.loop || false,
+              onChange: _this.handleLoopChange
+            }),
+            'Loop Video'
+          )
+        ),
         _react2.default.createElement(
           'div',
-          { className: 'container' },
+          { className: 'vspacing' },
           _react2.default.createElement(
             'div',
-            null,
-            'Column Settings'
-          ),
-          _this.props.asset.type == 'image' && _react2.default.createElement(
-            'div',
-            null,
-            'No settings for images yet'
-          ),
-          _this.props.asset.type == 'video' && _react2.default.createElement(
-            'div',
-            null,
+            { className: 'pull-right' },
             _react2.default.createElement(
-              'label',
-              null,
-              _react2.default.createElement('input', {
-                type: 'checkbox',
-                checked: _this.props.properties.loop || false,
-                onChange: _this.handleLoopChange
-              }),
-              'Loop Video'
+              'button',
+              { className: 'button outline', onClick: _this.props.delete },
+              'Delete'
+            ),
+            _react2.default.createElement(
+              'button',
+              { className: 'button', onClick: _this.props.hide },
+              'Okay'
             )
-          )
+          ),
+          _react2.default.createElement('div', { className: 'clearfix' })
         )
       );
     }, _temp), _possibleConstructorReturn(_this, _ret);
@@ -13259,27 +13273,22 @@ var Layer = function (_React$Component) {
         { className: 'card' },
         _react2.default.createElement(
           'div',
-          null,
+          { className: 'card-title' },
           'Layer ',
-          _this.props.number
-        ),
-        _react2.default.createElement(
-          'div',
-          null,
+          _this.props.number,
           _react2.default.createElement(
-            'button',
-            { className: 'button outline small', onClick: _this.showAssetsBrowser },
-            'Add Column'
-          ),
-          _react2.default.createElement(
-            'button',
-            { className: 'button outline small', onClick: _this.props.deleteLayer },
-            'Delete Layer'
+            'div',
+            { className: 'pull-right' },
+            _react2.default.createElement(
+              'button',
+              { className: 'button outline small', onClick: _this.props.deleteLayer },
+              'Delete'
+            )
           )
         ),
         _react2.default.createElement(
           'div',
-          null,
+          { className: 'card-content' },
           _this.props.columns.map(function (column) {
             return _react2.default.createElement(
               'div',
@@ -13294,11 +13303,20 @@ var Layer = function (_React$Component) {
               }))
             );
           }),
+          _react2.default.createElement(
+            'div',
+            { className: 'grid-column' },
+            _react2.default.createElement(
+              'div',
+              { className: 'preview-wrapper' },
+              _react2.default.createElement('div', { className: 'preview button', onClick: _this.showAssetsBrowser, 'data-name': 'Add Column' })
+            )
+          ),
           _react2.default.createElement('div', { className: 'clearfix' })
         ),
         _this.state.showAssetsBrowser && _react2.default.createElement(
           _Modal2.default,
-          { onClose: _this.hideAssetsBrowser },
+          { onClose: _this.hideAssetsBrowser, title: 'Assets' },
           _react2.default.createElement(_AssetBrowser2.default, { onAssetClick: _this.addColumn })
         )
       );
@@ -13397,6 +13415,7 @@ var LayerStack = function (_React$Component) {
             'Add Layer'
           )
         ),
+        _react2.default.createElement('div', { className: 'vspacing' }),
         _this.props.layers.slice(0).reverse().map(function (layer) {
           return _react2.default.createElement(_Layer2.default, _extends({ key: layer.number }, layer));
         })
