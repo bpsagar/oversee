@@ -1,0 +1,53 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; }
+
+body {
+  background-color: #F3F3F3;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  line-height: 1.5; }
+
+.container {
+  padding: 15px; }
+
+.header {
+  background-color: #FFF;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
+  padding: 10px 0;
+  text-align: center; }
+  .header .brand {
+    color: #565656;
+    font-size: 22px;
+    font-weight: 500;
+    padding: 5px 0; }
+  .header .link {
+    color: #BFBFBF;
+    display: inline-block;
+    outline: 0;
+    padding: 2px 5px;
+    position: relative;
+    text-decoration: none;
+    -webkit-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+    -ms-transition: all 0.2s;
+    -o-transition: all 0.2s;
+    transition: all 0.2s; }
+    .header .link.active, .header .link:focus, .header .link:hover {
+      color: #565656;
+      text-decoration: none; }
+      .header .link.active:after, .header .link:focus:after, .header .link:hover:after {
+        background-color: #7554E9;
+        border-radius: 50%;
+        content: '';
+        height: 5px;
+        left: 50%;
+        position: absolute;
+        top: 100%;
+        width: 5px;
+        -webkit-transform: translateX(-50%);
+        -moz-transform: translateX(-50%);
+        -ms-transform: translateX(-50%);
+        -o-transform: translateX(-50%);
+        transform: translateX(-50%); }

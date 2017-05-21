@@ -1,0 +1,22 @@
+$font-weight-light: 300;
+$font-weight-regular: 400;
+$font-weight-bold: 500;
+
+$font-size-regular: 16px;
+$font-size-big: 22px;
+
+$light-gray-color: #BFBFBF;
+$dark-gray-color: #565656;
+
+$primary-color: #7554E9;
+
+body {
+  background-color: #F3F3F3;
+  font-family: 'Montserrat', sans-serif;
+  font-size: $font-size-regular;
+  line-height: 1.5;
+}
+
+.container {
+  padding: 15px;
+}

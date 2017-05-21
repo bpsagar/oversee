@@ -1,0 +1,40 @@
+.header {
+  background-color: #FFF;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
+  padding: 10px 0;
+  text-align: center;
+
+  .brand {
+    color: $dark-gray-color;
+    font-size: $font-size-big;
+    font-weight: $font-weight-bold;
+    padding: 5px 0;
+  }
+
+  .link {
+    color: $light-gray-color;
+    display: inline-block;
+    outline: 0;
+    padding: 2px 5px;
+    position: relative;
+    text-decoration: none;
+    @include transition(all 0.2s);
+
+    &.active, &:focus, &:hover {
+      color: $dark-gray-color;
+      text-decoration: none;
+
+      &:after {
+        background-color: $primary-color;
+        border-radius: 50%;
+        content: '';
+        height: 5px;
+        left: 50%;
+        position: absolute;
+        top: 100%;
+        width: 5px;
+        @include transform(translateX(-50%));
+      }
+    }
+  }
+}

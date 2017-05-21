@@ -1,0 +1,8 @@
+<nav class="header">
+  <div class="brand">Oversee</div>
+  <div>
+    <a class="link {% if request.path.startswith('/setup') %}active{% endif %}" href="/setup/">Setup</a>
+    <a class="link {% if request.path.startswith('/remote') %}active{% endif %}" href="/remote/">Remote</a>
+    <a class="link" href="/">Screen</a>
+  </div>
+</nav>
