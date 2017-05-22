@@ -53,6 +53,8 @@ body {
 .grid-column {
   float: left;
   width: 50%; }
+  .grid-column.bordered {
+    box-shadow: 0 0 0 2px #7554E9; }
 
 .pull-right {
   float: right; }

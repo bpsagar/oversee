@@ -1,6 +1,10 @@
 .grid-column {
   float: left;
   width: 50%;
+
+  &.bordered {
+    box-shadow: 0 0 0 2px $primary-color;
+  }
 }
 
 .pull-right {
