@@ -263,12 +263,7 @@ body {
     object-fit: fill;
     width: 100%; }
   .output.hidden {
-    opacity: 0;
-    -webkit-transition: all 1s;
-    -moz-transition: all 1s;
-    -ms-transition: all 1s;
-    -o-transition: all 1s;
-    transition: all 1s; }
+    opacity: 0; }
   .output.fade.in {
     -webkit-animation: fadein 1s ease 0s 1;
     -moz-animation: fadein 1s ease 0s 1;

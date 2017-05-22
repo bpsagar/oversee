@@ -18,7 +18,6 @@
 
   &.hidden {
     opacity: 0;
-    @include transition(all 1s);
   }
 
   &.fade {
