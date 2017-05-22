@@ -43,7 +43,7 @@ body {
       border-color: #633de6;
       color: #633de6; }
   .button.small {
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 400;
     padding: 2px 6px; }
   .button.block {
@@ -71,7 +71,7 @@ body {
       bottom: 0;
       color: #FFF;
       content: attr(data-name);
-      font-size: 10px;
+      font-size: 12px;
       font-weight: 500;
       left: 0;
       overflow: hidden;
