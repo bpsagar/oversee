@@ -1,11 +1,9 @@
 from drongo import Drongo
-from tinydb import Query
-import copy
 import json
 import os
 
 from .configure import configure, ASSETS_DIR
-from .exceptions import InvalidDatabaseState
+from .services import LayerService
 
 app = Drongo()
 configure(app)
@@ -47,61 +45,31 @@ def assets(ctx):
 
 @app.url('/api/layers/')
 def layers(ctx):
-    table = ctx.modules.db.table('layer')
-    layers = table.all()
+    service = LayerService(db=ctx.modules.db)
+    layers = service.get_layers()
     ctx.response.set_json(dict(layers=layers))
 
 
 @app.url('/api/layers/update/', method='POST')
 def update_layers(ctx):
-    table = ctx.modules.db.table('layer')
     state = json.loads(ctx.request.env['BODY'])
-
-    last_layer_number = 0
-    for layer in state.get('layers', []):
-        last_layer_number = max(last_layer_number, layer['number'])
-        Layer = Query()
-        results = table.search(Layer.number == layer['number'])
-        if len(results) > 1:
-            raise InvalidDatabaseState()
-        elif len(results) == 1:
-            old_layer = copy.deepcopy(results[0])
-            old_layer.update(layer)
-            selected_column = None
-            if 'selected_column' in old_layer:
-                selected_column = old_layer.get('selected_column')
-                del old_layer['selected_column']
-            table.update(old_layer, Layer.number == layer['number'])
-            column_numbers = [c['number'] for c in old_layer['columns']]
-            if selected_column not in column_numbers:
-                table.update(
-                    dict(selected_column=None),
-                    Layer.number == layer['number']
-                )
-        else:
-            layer.update(dict(selected_column=None))
-            table.insert(layer)
-
-    table.remove(Layer.number > last_layer_number)
+    service = LayerService(db=ctx.modules.db)
+    service.update_layers(layers=state.get('layers'))
     ctx.response.set_json({})
 
 
 @app.url('/api/screen/')
 def screen_data(ctx):
-    table = ctx.modules.db.table('layer')
-    screen = {}
-    for layer in table.all():
-        screen[layer['number']] = layer['selected_column']
+    service = LayerService(db=ctx.modules.db)
+    screen = service.get_screen()
     ctx.response.set_json(dict(screen=screen))
 
 
 @app.url('/api/screen/update/', method='POST')
 def update_screen(ctx):
-    table = ctx.modules.db.table('layer')
+    service = LayerService(db=ctx.modules.db)
     state = json.loads(ctx.request.env['BODY'])
-    for layer, column in state.get('screen', {}).items():
-        Layer = Query()
-        table.update(dict(selected_column=column), Layer.number == int(layer))
+    service.update_screen(screen=state.get('screen'))
     ctx.response.set_json({})
 
 
