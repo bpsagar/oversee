@@ -1,9 +1,11 @@
 from drongo import Drongo
+from tinydb import Query
+import copy
 import json
 import os
 
 from .configure import configure, ASSETS_DIR
-
+from .exceptions import InvalidDatabaseState
 
 app = Drongo()
 configure(app)
@@ -53,60 +55,66 @@ def layers(ctx):
 @app.url('/api/layers/update/', method='POST')
 def update_layers(ctx):
     table = ctx.modules.db.table('layer')
-    table.purge()
     state = json.loads(ctx.request.env['BODY'])
+
+    last_layer_number = 0
     for layer in state.get('layers', []):
-        table.insert(layer)
+        last_layer_number = max(last_layer_number, layer['number'])
+        Layer = Query()
+        results = table.search(Layer.number == layer['number'])
+        if len(results) > 1:
+            raise InvalidDatabaseState()
+        elif len(results) == 1:
+            old_layer = copy.deepcopy(results[0])
+            old_layer.update(layer)
+            selected_column = None
+            if 'selected_column' in old_layer:
+                selected_column = old_layer.get('selected_column')
+                del old_layer['selected_column']
+            table.update(old_layer, Layer.number == layer['number'])
+            column_numbers = [c['number'] for c in old_layer['columns']]
+            if selected_column not in column_numbers:
+                table.update(
+                    dict(selected_column=None),
+                    Layer.number == layer['number']
+                )
+        else:
+            layer.update(dict(selected_column=None))
+            table.insert(layer)
+
+    table.remove(Layer.number > last_layer_number)
     ctx.response.set_json({})
 
 
 @app.url('/api/screen/')
 def screen_data(ctx):
-    table = ctx.modules.db.table('screen')
-    screen_layers = table.all()
+    table = ctx.modules.db.table('layer')
     screen = {}
-    for item in screen_layers:
-        screen[item['layer']] = item['column']
+    for layer in table.all():
+        screen[layer['number']] = layer['selected_column']
     ctx.response.set_json(dict(screen=screen))
 
 
 @app.url('/api/screen/update/', method='POST')
 def update_screen(ctx):
-    table = ctx.modules.db.table('screen')
-    table.purge()
+    table = ctx.modules.db.table('layer')
     state = json.loads(ctx.request.env['BODY'])
     for layer, column in state.get('screen', {}).items():
-        table.insert(dict(layer=int(layer), column=column))
+        Layer = Query()
+        table.update(dict(selected_column=column), Layer.number == int(layer))
     ctx.response.set_json({})
 
 
 @app.url('/api/screen/assets/')
 def screen_assets(ctx):
-    screen = ctx.modules.db.table('screen').all()
     layers = ctx.modules.db.table('layer').all()
-    screen = sorted(screen, key=lambda x: x['layer'])
-
-    layer_column_map = {}
-
-    for c in screen:
-        layer_column_map[c['layer']] = c['column']
-
     screen_columns = []
 
     for layer in layers:
-        layer_number = layer['number']
-        if layer_number not in layer_column_map:
-            screen_columns.append(dict(
-                layer_number=layer['number'],
-                column_number=None,
-                layer=layer
-            ))
-        else:
-            column_number = layer_column_map.get(layer_number)
-            screen_columns.append(dict(
-                layer_number=layer['number'],
-                column_number=column_number,
-                layer=layer
-            ))
+        screen_columns.append(dict(
+            layer_number=layer['number'],
+            column_number=layer['selected_column'],
+            layer=layer
+        ))
 
     ctx.response.set_json(dict(screen=screen_columns))

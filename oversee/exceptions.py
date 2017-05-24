@@ -1,0 +1,3 @@
+
+class InvalidDatabaseState(Exception):
+    pass
