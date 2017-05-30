@@ -1,7 +1,21 @@
 import React from 'react'
 import Modal from './Modal'
 
+const BLEND_MODES = [
+  'normal', 'multiply', 'screen', 'overlay', 'darken', 'lighten',
+  'color-dodge', 'color-burn', 'hard-light', 'soft-light', 'difference',
+  'exclusion', 'hue', 'saturation', 'color', 'luminosity'
+]
+
 class ColumnSettings extends React.Component {
+  getCurrentBlendMode = () => {
+    return this.props.properties.blend_mode || 'normal'
+  }
+
+  handleBlendModeChange = (e) => {
+    this.props.updateProperty('blend_mode', e.target.value)
+  }
+
   handleLoopChange = (e) => {
     if (e.target.checked) {
       this.props.updateProperty('loop', true)
@@ -45,6 +59,16 @@ class ColumnSettings extends React.Component {
                 onChange={this.handlePlayNextChange}
               />
               Play Next
+            </label>
+          </div>
+          <div>
+            <label>
+              Blend Mode
+              <select onChange={this.handleBlendModeChange}>
+                {BLEND_MODES.map(mode =>
+                  <option value={mode} selected={mode === this.getCurrentBlendMode()}>{mode}</option>
+                )}
+              </select>
             </label>
           </div>
         </div>

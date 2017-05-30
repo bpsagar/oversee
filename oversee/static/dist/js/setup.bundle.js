@@ -28533,6 +28533,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var BLEND_MODES = ['normal', 'multiply', 'screen', 'overlay', 'darken', 'lighten', 'color-dodge', 'color-burn', 'hard-light', 'soft-light', 'difference', 'exclusion', 'hue', 'saturation', 'color', 'luminosity'];
+
 var ColumnSettings = function (_React$Component) {
   _inherits(ColumnSettings, _React$Component);
 
@@ -28547,7 +28549,11 @@ var ColumnSettings = function (_React$Component) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = ColumnSettings.__proto__ || Object.getPrototypeOf(ColumnSettings)).call.apply(_ref, [this].concat(args))), _this), _this.handleLoopChange = function (e) {
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = ColumnSettings.__proto__ || Object.getPrototypeOf(ColumnSettings)).call.apply(_ref, [this].concat(args))), _this), _this.getCurrentBlendMode = function () {
+      return _this.props.properties.blend_mode || 'normal';
+    }, _this.handleBlendModeChange = function (e) {
+      _this.props.updateProperty('blend_mode', e.target.value);
+    }, _this.handleLoopChange = function (e) {
       if (e.target.checked) {
         _this.props.updateProperty('loop', true);
       } else {
@@ -28597,6 +28603,26 @@ var ColumnSettings = function (_React$Component) {
                 onChange: _this.handlePlayNextChange
               }),
               'Play Next'
+            )
+          ),
+          _react2.default.createElement(
+            'div',
+            null,
+            _react2.default.createElement(
+              'label',
+              null,
+              'Blend Mode',
+              _react2.default.createElement(
+                'select',
+                { onChange: _this.handleBlendModeChange },
+                BLEND_MODES.map(function (mode) {
+                  return _react2.default.createElement(
+                    'option',
+                    { value: mode, selected: mode === _this.getCurrentBlendMode() },
+                    mode
+                  );
+                })
+              )
             )
           )
         ),

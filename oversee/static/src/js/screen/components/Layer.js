@@ -42,20 +42,32 @@ class Layer extends React.Component {
         {this.props.layer.columns.map(column => {
           if (this.state.currentColumnNumber === column.number) {
             return (
-              <div key={column.number} className={this.state.nextColumnNumber !== this.state.currentColumnNumber ? "output fade out" : "output"}>
+              <div
+                key={column.number}
+                className={this.state.nextColumnNumber !== this.state.currentColumnNumber ? "output fade out" : "output"}
+                style={{mixBlendMode: column.properties.blend_mode || 'normal'}}
+              >
                 <Asset layer_number={this.props.layer_number} {...column} visible={true} />
               </div>
             )
           }
           if (this.state.nextColumnNumber === column.number && this.state.currentColumnNumber !== this.state.nextColumnNumber) {
             return (
-              <div key={column.number} className={this.state.nextColumnNumber ? "output fade in" : "output"}>
+              <div
+                key={column.number}
+                className={this.state.nextColumnNumber ? "output fade in" : "output"}
+                style={{mixBlendMode: column.properties.blend_mode || 'normal'}}
+              >
                 <Asset layer_number={this.props.layer_number} {...column} visible={true} />
               </div>
             )
           }
           return (
-            <div key={column.number} className="output hidden">
+            <div
+              key={column.number}
+              className="output hidden"
+              style={{mixBlendMode: column.properties.blend_mode || 'normal'}}
+            >
               <Asset layer_number={this.props.layer_number} {...column} visible={false} />
             </div>
           )

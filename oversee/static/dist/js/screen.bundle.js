@@ -25895,20 +25895,32 @@ var Layer = function (_React$Component) {
           if (_this.state.currentColumnNumber === column.number) {
             return _react2.default.createElement(
               'div',
-              { key: column.number, className: _this.state.nextColumnNumber !== _this.state.currentColumnNumber ? "output fade out" : "output" },
+              {
+                key: column.number,
+                className: _this.state.nextColumnNumber !== _this.state.currentColumnNumber ? "output fade out" : "output",
+                style: { mixBlendMode: column.properties.blend_mode || 'normal' }
+              },
               _react2.default.createElement(_Asset2.default, _extends({ layer_number: _this.props.layer_number }, column, { visible: true }))
             );
           }
           if (_this.state.nextColumnNumber === column.number && _this.state.currentColumnNumber !== _this.state.nextColumnNumber) {
             return _react2.default.createElement(
               'div',
-              { key: column.number, className: _this.state.nextColumnNumber ? "output fade in" : "output" },
+              {
+                key: column.number,
+                className: _this.state.nextColumnNumber ? "output fade in" : "output",
+                style: { mixBlendMode: column.properties.blend_mode || 'normal' }
+              },
               _react2.default.createElement(_Asset2.default, _extends({ layer_number: _this.props.layer_number }, column, { visible: true }))
             );
           }
           return _react2.default.createElement(
             'div',
-            { key: column.number, className: 'output hidden' },
+            {
+              key: column.number,
+              className: 'output hidden',
+              style: { mixBlendMode: column.properties.blend_mode || 'normal' }
+            },
             _react2.default.createElement(_Asset2.default, _extends({ layer_number: _this.props.layer_number }, column, { visible: false }))
           );
         })
