@@ -28553,6 +28553,12 @@ var ColumnSettings = function (_React$Component) {
       } else {
         _this.props.updateProperty('loop', false);
       }
+    }, _this.handlePlayNextChange = function (e) {
+      if (e.target.checked) {
+        _this.props.updateProperty('play_next', true);
+      } else {
+        _this.props.updateProperty('play_next', false);
+      }
     }, _this.render = function () {
       return _react2.default.createElement(
         _Modal2.default,
@@ -28566,14 +28572,32 @@ var ColumnSettings = function (_React$Component) {
           'div',
           null,
           _react2.default.createElement(
-            'label',
+            'div',
             null,
-            _react2.default.createElement('input', {
-              type: 'checkbox',
-              checked: _this.props.properties.loop || false,
-              onChange: _this.handleLoopChange
-            }),
-            'Loop Video'
+            _react2.default.createElement(
+              'label',
+              null,
+              _react2.default.createElement('input', {
+                type: 'checkbox',
+                checked: _this.props.properties.loop || false,
+                onChange: _this.handleLoopChange
+              }),
+              'Loop Video'
+            )
+          ),
+          _react2.default.createElement(
+            'div',
+            null,
+            _react2.default.createElement(
+              'label',
+              null,
+              _react2.default.createElement('input', {
+                type: 'checkbox',
+                checked: _this.props.properties.play_next || false,
+                onChange: _this.handlePlayNextChange
+              }),
+              'Play Next'
+            )
           )
         ),
         _react2.default.createElement(

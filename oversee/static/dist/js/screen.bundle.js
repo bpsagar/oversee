@@ -25728,6 +25728,10 @@ var _react = __webpack_require__(15);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _axios = __webpack_require__(95);
+
+var _axios2 = _interopRequireDefault(_axios);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -25752,16 +25756,28 @@ var Asset = function (_React$Component) {
 
     return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Asset.__proto__ || Object.getPrototypeOf(Asset)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
       videoEnded: false
+    }, _this.playNextColumn = function () {
+      _axios2.default.post('/api/select-column/', { layer: _this.props.layer_number, column: _this.props.number + 1 });
     }, _this.handleVideoEnd = function () {
       _this.setState(_extends({}, _this.state, { videoEnded: true }));
+    }, _this.handleTimeUpdate = function (e) {
+      if (_this.asset.currentTime >= _this.asset.duration - 1) {
+        if (!_this.state.videoEnded) {
+          if (_this.props.properties.play_next) {
+            _this.playNextColumn();
+          }
+        }
+      }
     }, _this.componentWillReceiveProps = function (newProps) {
       if (_this.props.asset.type == 'video') {
         if (!_this.props.visible && newProps.visible) {
           _this.asset.play();
+          _this.asset.addEventListener('timeupdate', _this.handleTimeUpdate, false);
           _this.asset.addEventListener('ended', _this.handleVideoEnd, false);
         } else if (_this.props.visible && !newProps.visible) {
           _this.asset.pause();
           _this.asset.currentTime = 0;
+          _this.asset.removeEventListener('timeupdate', _this.handleTimeUpdate);
           _this.asset.removeEventListener('ended', _this.handleVideoEnd);
           _this.setState(_extends({}, _this.state, { videoEnded: false }));
         }
@@ -25769,6 +25785,7 @@ var Asset = function (_React$Component) {
     }, _this.componentDidMount = function () {
       if (_this.props.asset.type == 'video' && _this.props.visible) {
         _this.asset.play();
+        _this.asset.addEventListener('timeupdate', _this.handleTimeUpdate, false);
         _this.asset.addEventListener('ended', _this.handleVideoEnd, false);
       }
     }, _this.getStyle = function () {
@@ -25879,20 +25896,20 @@ var Layer = function (_React$Component) {
             return _react2.default.createElement(
               'div',
               { key: column.number, className: _this.state.nextColumnNumber !== _this.state.currentColumnNumber ? "output fade out" : "output" },
-              _react2.default.createElement(_Asset2.default, _extends({}, column, { visible: true }))
+              _react2.default.createElement(_Asset2.default, _extends({ layer_number: _this.props.layer_number }, column, { visible: true }))
             );
           }
           if (_this.state.nextColumnNumber === column.number && _this.state.currentColumnNumber !== _this.state.nextColumnNumber) {
             return _react2.default.createElement(
               'div',
               { key: column.number, className: _this.state.nextColumnNumber ? "output fade in" : "output" },
-              _react2.default.createElement(_Asset2.default, _extends({}, column, { visible: true }))
+              _react2.default.createElement(_Asset2.default, _extends({ layer_number: _this.props.layer_number }, column, { visible: true }))
             );
           }
           return _react2.default.createElement(
             'div',
             { key: column.number, className: 'output hidden' },
-            _react2.default.createElement(_Asset2.default, _extends({}, column, { visible: false }))
+            _react2.default.createElement(_Asset2.default, _extends({ layer_number: _this.props.layer_number }, column, { visible: false }))
           );
         })
       );

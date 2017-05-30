@@ -26,11 +26,13 @@ def setup(ctx):
 
 @app.url('/api/assets/')
 def assets(ctx):
+    VIDEO_EXTENSIONS = ['mp4', 'mov']
     files = os.listdir(ASSETS_DIR)
     assets = []
     for file in files:
         file_type = 'image'
-        if file.endswith('.mp4'):
+        file_extension = file.rsplit('.', 1)[-1]
+        if file_extension in VIDEO_EXTENSIONS:
             file_type = 'video'
         assets.append({
             'filename': file,
@@ -70,6 +72,17 @@ def update_screen(ctx):
     service = LayerService(db=ctx.modules.db)
     state = json.loads(ctx.request.env['BODY'])
     service.update_screen(screen=state.get('screen'))
+    ctx.response.set_json({})
+
+
+@app.url('/api/select-column/', method='POST')
+def select_column(ctx):
+    service = LayerService(db=ctx.modules.db)
+    data = json.loads(ctx.request.env['BODY'])
+    service.update_layer(
+        number=data['layer'],
+        params=dict(selected_column=data['column'])
+    )
     ctx.response.set_json({})
 
 

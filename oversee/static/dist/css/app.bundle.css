@@ -261,7 +261,12 @@ body {
   .output video {
     height: 100%;
     object-fit: fill;
-    width: 100%; }
+    width: 100%;
+    -webkit-transition: opacity 1s;
+    -moz-transition: opacity 1s;
+    -ms-transition: opacity 1s;
+    -o-transition: opacity 1s;
+    transition: opacity 1s; }
   .output.hidden {
     opacity: 0; }
   .output.fade.in {

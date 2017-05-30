@@ -30,6 +30,9 @@ class LayerService(object):
     def update_layer(self, number, params):
         self.table.update(params, Layer.number == number)
 
+    def select_column(self, layer_number, column_number):
+        self.update_layer(layer_number, dict(selected_column=column_number))
+
     def fix_layers(self):
         """Fixing selected column value for layers"""
         for layer in self.table.all():

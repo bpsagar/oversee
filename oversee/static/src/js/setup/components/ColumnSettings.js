@@ -11,6 +11,15 @@ class ColumnSettings extends React.Component {
     }
   }
 
+  handlePlayNextChange = (e) => {
+    if (e.target.checked) {
+      this.props.updateProperty('play_next', true)
+    }
+    else {
+      this.props.updateProperty('play_next', false)
+    }
+  }
+
   render = () => (
     <Modal onClose={this.props.hide} title="Settings">
       {this.props.asset.type == 'image' && 
@@ -18,14 +27,26 @@ class ColumnSettings extends React.Component {
       }
       {this.props.asset.type == 'video' &&
         <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={this.props.properties.loop || false}
-              onChange={this.handleLoopChange}
-            />
-            Loop Video
-          </label>
+          <div>
+            <label>
+              <input
+                type="checkbox"
+                checked={this.props.properties.loop || false}
+                onChange={this.handleLoopChange}
+              />
+              Loop Video
+            </label>
+          </div>
+          <div>
+            <label>
+              <input
+                type="checkbox"
+                checked={this.props.properties.play_next || false}
+                onChange={this.handlePlayNextChange}
+              />
+              Play Next
+            </label>
+          </div>
         </div>
       }
       <div className="vspacing">

@@ -43,20 +43,20 @@ class Layer extends React.Component {
           if (this.state.currentColumnNumber === column.number) {
             return (
               <div key={column.number} className={this.state.nextColumnNumber !== this.state.currentColumnNumber ? "output fade out" : "output"}>
-                <Asset {...column} visible={true} />
+                <Asset layer_number={this.props.layer_number} {...column} visible={true} />
               </div>
             )
           }
           if (this.state.nextColumnNumber === column.number && this.state.currentColumnNumber !== this.state.nextColumnNumber) {
             return (
               <div key={column.number} className={this.state.nextColumnNumber ? "output fade in" : "output"}>
-                <Asset {...column} visible={true} />
+                <Asset layer_number={this.props.layer_number} {...column} visible={true} />
               </div>
             )
           }
           return (
             <div key={column.number} className="output hidden">
-              <Asset {...column} visible={false} />
+              <Asset layer_number={this.props.layer_number} {...column} visible={false} />
             </div>
           )
         }
