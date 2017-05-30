@@ -53,7 +53,8 @@ class LayerService(object):
             db_layer = self.get_layer(number=layer['number'])
             if db_layer:
                 # Not updating selected column
-                del layer['selected_column']
+                if 'selected_column' in layer:
+                    del layer['selected_column']
                 db_layer.update(layer)
                 self.update_layer(number=layer['number'], params=db_layer)
             else:
