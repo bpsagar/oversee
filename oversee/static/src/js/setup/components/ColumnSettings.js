@@ -36,9 +36,16 @@ class ColumnSettings extends React.Component {
 
   render = () => (
     <Modal onClose={this.props.hide} title="Settings">
-      {this.props.asset.type == 'image' && 
-        <div>No settings for images yet</div>
-      }
+      <div>
+        <label>
+          Blend Mode
+          <select value={this.getCurrentBlendMode()} onChange={this.handleBlendModeChange}>
+            {BLEND_MODES.map(mode =>
+              <option key={mode} value={mode}>{mode}</option>
+            )}
+          </select>
+        </label>
+      </div>
       {this.props.asset.type == 'video' &&
         <div>
           <div>
@@ -59,16 +66,6 @@ class ColumnSettings extends React.Component {
                 onChange={this.handlePlayNextChange}
               />
               Play Next
-            </label>
-          </div>
-          <div>
-            <label>
-              Blend Mode
-              <select onChange={this.handleBlendModeChange}>
-                {BLEND_MODES.map(mode =>
-                  <option value={mode} selected={mode === this.getCurrentBlendMode()}>{mode}</option>
-                )}
-              </select>
             </label>
           </div>
         </div>

@@ -28569,10 +28569,25 @@ var ColumnSettings = function (_React$Component) {
       return _react2.default.createElement(
         _Modal2.default,
         { onClose: _this.props.hide, title: 'Settings' },
-        _this.props.asset.type == 'image' && _react2.default.createElement(
+        _react2.default.createElement(
           'div',
           null,
-          'No settings for images yet'
+          _react2.default.createElement(
+            'label',
+            null,
+            'Blend Mode',
+            _react2.default.createElement(
+              'select',
+              { value: _this.getCurrentBlendMode(), onChange: _this.handleBlendModeChange },
+              BLEND_MODES.map(function (mode) {
+                return _react2.default.createElement(
+                  'option',
+                  { key: mode, value: mode },
+                  mode
+                );
+              })
+            )
+          )
         ),
         _this.props.asset.type == 'video' && _react2.default.createElement(
           'div',
@@ -28603,26 +28618,6 @@ var ColumnSettings = function (_React$Component) {
                 onChange: _this.handlePlayNextChange
               }),
               'Play Next'
-            )
-          ),
-          _react2.default.createElement(
-            'div',
-            null,
-            _react2.default.createElement(
-              'label',
-              null,
-              'Blend Mode',
-              _react2.default.createElement(
-                'select',
-                { onChange: _this.handleBlendModeChange },
-                BLEND_MODES.map(function (mode) {
-                  return _react2.default.createElement(
-                    'option',
-                    { value: mode, selected: mode === _this.getCurrentBlendMode() },
-                    mode
-                  );
-                })
-              )
             )
           )
         ),
