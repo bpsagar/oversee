@@ -7,3 +7,14 @@ render(
   <Screen />,
   document.getElementById('screen')
 )
+
+document.body.addEventListener('click', () => {
+  var element = document.body
+  var requestMethod = (
+    element.requestFullScreen ||
+    element.webkitRequestFullScreen ||
+    element.mozRequestFullScreen ||
+    element.msRequestFullScreen
+  )
+  requestMethod.call(element);
+})

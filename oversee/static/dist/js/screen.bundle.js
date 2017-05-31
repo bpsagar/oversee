@@ -25948,5 +25948,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 (0, _reactDom.render)(_react2.default.createElement(_Screen2.default, null), document.getElementById('screen'));
 
+document.body.addEventListener('click', function () {
+  var element = document.body;
+  var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
+  requestMethod.call(element);
+});
+
 /***/ })
 /******/ ]);
