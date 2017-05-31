@@ -25,13 +25,8 @@ class ColumnSettings extends React.Component {
     }
   }
 
-  handlePlayNextChange = (e) => {
-    if (e.target.checked) {
-      this.props.updateProperty('play_next', true)
-    }
-    else {
-      this.props.updateProperty('play_next', false)
-    }
+  handleLoopPointChange = (e) => {
+    this.props.updateProperty('loop_point', e.target.value)
   }
 
   render = () => (
@@ -60,12 +55,12 @@ class ColumnSettings extends React.Component {
           </div>
           <div>
             <label>
+              Loop Point
               <input
-                type="checkbox"
-                checked={this.props.properties.play_next || false}
-                onChange={this.handlePlayNextChange}
+                type="text"
+                value={this.props.properties.loop_point || 0}
+                onChange={this.handleLoopPointChange}
               />
-              Play Next
             </label>
           </div>
         </div>

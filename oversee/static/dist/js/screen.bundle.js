@@ -25756,28 +25756,23 @@ var Asset = function (_React$Component) {
 
     return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Asset.__proto__ || Object.getPrototypeOf(Asset)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
       videoEnded: false
-    }, _this.playNextColumn = function () {
-      _axios2.default.post('/api/select-column/', { layer: _this.props.layer_number, column: _this.props.number + 1 });
+    }, _this.getLoopPoint = function () {
+      return _this.props.properties.loop_point || 0;
     }, _this.handleVideoEnd = function () {
-      _this.setState(_extends({}, _this.state, { videoEnded: true }));
-    }, _this.handleTimeUpdate = function (e) {
-      if (_this.asset.currentTime >= _this.asset.duration - 1) {
-        if (!_this.state.videoEnded) {
-          if (_this.props.properties.play_next) {
-            _this.playNextColumn();
-          }
-        }
+      if (_this.props.properties.loop) {
+        _this.asset.currentTime = _this.props.properties.loop_point;
+        _this.asset.play();
+      } else {
+        _this.setState(_extends({}, _this.state, { videoEnded: true }));
       }
     }, _this.componentWillReceiveProps = function (newProps) {
       if (_this.props.asset.type == 'video') {
         if (!_this.props.visible && newProps.visible) {
           _this.asset.play();
-          _this.asset.addEventListener('timeupdate', _this.handleTimeUpdate, false);
           _this.asset.addEventListener('ended', _this.handleVideoEnd, false);
         } else if (_this.props.visible && !newProps.visible) {
           _this.asset.pause();
           _this.asset.currentTime = 0;
-          _this.asset.removeEventListener('timeupdate', _this.handleTimeUpdate);
           _this.asset.removeEventListener('ended', _this.handleVideoEnd);
           _this.setState(_extends({}, _this.state, { videoEnded: false }));
         }
@@ -25785,7 +25780,6 @@ var Asset = function (_React$Component) {
     }, _this.componentDidMount = function () {
       if (_this.props.asset.type == 'video' && _this.props.visible) {
         _this.asset.play();
-        _this.asset.addEventListener('timeupdate', _this.handleTimeUpdate, false);
         _this.asset.addEventListener('ended', _this.handleVideoEnd, false);
       }
     }, _this.getStyle = function () {
@@ -25804,7 +25798,7 @@ var Asset = function (_React$Component) {
         return _react2.default.createElement(
           'video',
           {
-            loop: _this.props.properties.loop,
+            loop: _this.props.properties.loop && _this.getLoopPoint() === 0,
             ref: function ref(dom) {
               _this.asset = dom;
             },

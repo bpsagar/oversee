@@ -28559,12 +28559,8 @@ var ColumnSettings = function (_React$Component) {
       } else {
         _this.props.updateProperty('loop', false);
       }
-    }, _this.handlePlayNextChange = function (e) {
-      if (e.target.checked) {
-        _this.props.updateProperty('play_next', true);
-      } else {
-        _this.props.updateProperty('play_next', false);
-      }
+    }, _this.handleLoopPointChange = function (e) {
+      _this.props.updateProperty('loop_point', e.target.value);
     }, _this.render = function () {
       return _react2.default.createElement(
         _Modal2.default,
@@ -28612,12 +28608,12 @@ var ColumnSettings = function (_React$Component) {
             _react2.default.createElement(
               'label',
               null,
+              'Loop Point',
               _react2.default.createElement('input', {
-                type: 'checkbox',
-                checked: _this.props.properties.play_next || false,
-                onChange: _this.handlePlayNextChange
-              }),
-              'Play Next'
+                type: 'text',
+                value: _this.props.properties.loop_point || 0,
+                onChange: _this.handleLoopPointChange
+              })
             )
           )
         ),
