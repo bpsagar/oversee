@@ -11,6 +11,7 @@ const MOVE_LAYER = 'setup/MOVE_LAYER'
 
 const ADD_COLUMN = 'setup/ADD_COLUMN'
 const DELETE_COLUMN = 'setup/DELETE_COLUMN'
+const MOVE_COLUMN = 'setup/MOVE_COLUMN'
 
 const UPDATE_COLUMN_PROPERTY = 'setup/UPDATE_COLUMN_PROPERTY'
 
@@ -71,6 +72,13 @@ export const addColumn = (layerNumber, asset, properties = {}) => {
 export const deleteColumn = (layerNumber, columnNumber) => {
   return dispatch => {
     dispatch({type: DELETE_COLUMN, layerNumber, columnNumber})
+    dispatch(saveState())
+  }
+}
+
+export const moveColumn = (direction, layerNumber, columnNumber) => {
+  return dispatch => {
+    dispatch({type: MOVE_COLUMN, direction, layerNumber, columnNumber})
     dispatch(saveState())
   }
 }
@@ -178,6 +186,37 @@ const layers = (state = [], action) => {
               ...column,
               number: column.number - 1
             })))
+          ]
+        },
+        ...state.slice(action.layerNumber)
+      ]
+    case MOVE_COLUMN:
+      var layer = state[action.layerNumber - 1]
+      if (action.direction === 'left' && action.columnNumber === 1) {
+        return state
+      }
+      if (action.direction === 'right' && action.columnNumber === layer.columns.length) {
+        return state
+      }
+      var index = action.columnNumber - 1
+      if (action.direction == 'left') {
+          index = action.columnNumber - 2
+      }
+      return [
+        ...state.slice(0, action.layerNumber - 1),
+        {
+          ...layer,
+          columns: [
+            ...layer.columns.slice(0, index),
+            {
+              ...layer.columns[index + 1],
+              number: index + 1
+            },
+            {
+              ...layer.columns[index],
+              number: index + 2
+            },
+            ...layer.columns.slice(index + 2)
           ]
         },
         ...state.slice(action.layerNumber)

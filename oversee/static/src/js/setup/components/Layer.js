@@ -42,6 +42,11 @@ class Layer extends React.Component {
               delete={() => this.props.deleteColumn(column.number)}
               updateProperty={(name, value) => this.props.updateColumnProperty(column.number, name, value)}
             />
+            <div>
+              <button className="button outline small pull-left" onClick={() => this.props.moveColumn('left', column.number)}>Left</button>
+              <button className="button outline small pull-right" onClick={() => this.props.moveColumn('right', column.number)}>Right</button>
+              <div className="clearfix"></div>
+            </div>
           </div>
         )}
         <div className="grid-column">
@@ -74,6 +79,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   deleteColumn: (columnNumber) => {
     dispatch(actions.deleteColumn(ownProps.number, columnNumber))
+  },
+  moveColumn: (direction, columnNumber) => {
+    dispatch(actions.moveColumn(direction, ownProps.number, columnNumber))
   },
   updateColumnProperty: (columnNumber, name, value) => {
     dispatch(actions.updateColumnProperty(ownProps.number, columnNumber, name, value))

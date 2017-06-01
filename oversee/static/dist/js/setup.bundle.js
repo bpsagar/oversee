@@ -26538,7 +26538,7 @@ function warning(message) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.updateColumnProperty = exports.deleteColumn = exports.addColumn = exports.moveLayer = exports.deleteLayer = exports.addLayer = exports.loadAssets = exports.loadLayers = exports.saveState = undefined;
+exports.updateColumnProperty = exports.moveColumn = exports.deleteColumn = exports.addColumn = exports.moveLayer = exports.deleteLayer = exports.addLayer = exports.loadAssets = exports.loadLayers = exports.saveState = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -26564,6 +26564,7 @@ var MOVE_LAYER = 'setup/MOVE_LAYER';
 
 var ADD_COLUMN = 'setup/ADD_COLUMN';
 var DELETE_COLUMN = 'setup/DELETE_COLUMN';
+var MOVE_COLUMN = 'setup/MOVE_COLUMN';
 
 var UPDATE_COLUMN_PROPERTY = 'setup/UPDATE_COLUMN_PROPERTY';
 
@@ -26624,6 +26625,13 @@ var addColumn = exports.addColumn = function addColumn(layerNumber, asset) {
 var deleteColumn = exports.deleteColumn = function deleteColumn(layerNumber, columnNumber) {
   return function (dispatch) {
     dispatch({ type: DELETE_COLUMN, layerNumber: layerNumber, columnNumber: columnNumber });
+    dispatch(saveState());
+  };
+};
+
+var moveColumn = exports.moveColumn = function moveColumn(direction, layerNumber, columnNumber) {
+  return function (dispatch) {
+    dispatch({ type: MOVE_COLUMN, direction: direction, layerNumber: layerNumber, columnNumber: columnNumber });
     dispatch(saveState());
   };
 };
@@ -26709,6 +26717,25 @@ var layers = function layers() {
             number: column.number - 1
           });
         })))
+      })], _toConsumableArray(state.slice(action.layerNumber)));
+    case MOVE_COLUMN:
+      var layer = state[action.layerNumber - 1];
+      if (action.direction === 'left' && action.columnNumber === 1) {
+        return state;
+      }
+      if (action.direction === 'right' && action.columnNumber === layer.columns.length) {
+        return state;
+      }
+      var index = action.columnNumber - 1;
+      if (action.direction == 'left') {
+        index = action.columnNumber - 2;
+      }
+      return [].concat(_toConsumableArray(state.slice(0, action.layerNumber - 1)), [_extends({}, layer, {
+        columns: [].concat(_toConsumableArray(layer.columns.slice(0, index)), [_extends({}, layer.columns[index + 1], {
+          number: index + 1
+        }), _extends({}, layer.columns[index], {
+          number: index + 2
+        })], _toConsumableArray(layer.columns.slice(index + 2)))
       })], _toConsumableArray(state.slice(action.layerNumber)));
     case UPDATE_COLUMN_PROPERTY:
       return state.map(function (layer) {
@@ -28790,7 +28817,26 @@ var Layer = function (_React$Component) {
                 updateProperty: function updateProperty(name, value) {
                   return _this.props.updateColumnProperty(column.number, name, value);
                 }
-              }))
+              })),
+              _react2.default.createElement(
+                'div',
+                null,
+                _react2.default.createElement(
+                  'button',
+                  { className: 'button outline small pull-left', onClick: function onClick() {
+                      return _this.props.moveColumn('left', column.number);
+                    } },
+                  'Left'
+                ),
+                _react2.default.createElement(
+                  'button',
+                  { className: 'button outline small pull-right', onClick: function onClick() {
+                      return _this.props.moveColumn('right', column.number);
+                    } },
+                  'Right'
+                ),
+                _react2.default.createElement('div', { className: 'clearfix' })
+              )
             );
           }),
           _react2.default.createElement(
@@ -28833,6 +28879,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
     },
     deleteColumn: function deleteColumn(columnNumber) {
       dispatch(actions.deleteColumn(ownProps.number, columnNumber));
+    },
+    moveColumn: function moveColumn(direction, columnNumber) {
+      dispatch(actions.moveColumn(direction, ownProps.number, columnNumber));
     },
     updateColumnProperty: function updateColumnProperty(columnNumber, name, value) {
       dispatch(actions.updateColumnProperty(ownProps.number, columnNumber, name, value));
