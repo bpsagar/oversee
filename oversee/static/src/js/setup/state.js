@@ -7,6 +7,7 @@ const LOAD_LAYERS = 'setup/LOAD_LAYERS'
 
 const ADD_LAYER = 'setup/ADD_LAYER'
 const DELETE_LAYER = 'setup/DELETE_LAYER'
+const MOVE_LAYER = 'setup/MOVE_LAYER'
 
 const ADD_COLUMN = 'setup/ADD_COLUMN'
 const DELETE_COLUMN = 'setup/DELETE_COLUMN'
@@ -49,6 +50,13 @@ export const addLayer = () => {
 export const deleteLayer = (number) => {
   return dispatch => {
     dispatch({type: DELETE_LAYER, number})
+    dispatch(saveState())
+  }
+}
+
+export const moveLayer = (direction, number) => {
+  return dispatch => {
+    dispatch({type: MOVE_LAYER, direction, number})
     dispatch(saveState())
   }
 }
@@ -104,6 +112,43 @@ const layers = (state = [], action) => {
           number: layer.number - 1
         })))
       ]
+    case MOVE_LAYER:
+      if (action.direction === 'up') {
+        if (action.number === state.length) {
+          return state
+        }
+        var index = action.number - 1
+        return [
+          ...state.slice(0, index),
+          {
+            ...state[index + 1],
+            number: index + 1
+          },
+          {
+            ...state[index],
+            number: index + 2
+          },
+          ...state.slice(index + 2)
+        ]
+      }
+      else {
+        if (action.number === 1) {
+          return state
+        }
+        var index = action.number - 1
+        return [
+          ...state.slice(0, index - 1),
+          {
+            ...state[index],
+            number: index
+          },
+          {
+            ...state[index - 1],
+            number: index + 1
+          },
+          ...state.slice(index + 1)
+        ]
+      }
     case ADD_COLUMN:
       return state.map(layer => {
         if (layer.number === action.layerNumber) {

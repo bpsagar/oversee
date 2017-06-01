@@ -26538,7 +26538,7 @@ function warning(message) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.updateColumnProperty = exports.deleteColumn = exports.addColumn = exports.deleteLayer = exports.addLayer = exports.loadAssets = exports.loadLayers = exports.saveState = undefined;
+exports.updateColumnProperty = exports.deleteColumn = exports.addColumn = exports.moveLayer = exports.deleteLayer = exports.addLayer = exports.loadAssets = exports.loadLayers = exports.saveState = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -26560,6 +26560,7 @@ var LOAD_LAYERS = 'setup/LOAD_LAYERS';
 
 var ADD_LAYER = 'setup/ADD_LAYER';
 var DELETE_LAYER = 'setup/DELETE_LAYER';
+var MOVE_LAYER = 'setup/MOVE_LAYER';
 
 var ADD_COLUMN = 'setup/ADD_COLUMN';
 var DELETE_COLUMN = 'setup/DELETE_COLUMN';
@@ -26600,6 +26601,13 @@ var addLayer = exports.addLayer = function addLayer() {
 var deleteLayer = exports.deleteLayer = function deleteLayer(number) {
   return function (dispatch) {
     dispatch({ type: DELETE_LAYER, number: number });
+    dispatch(saveState());
+  };
+};
+
+var moveLayer = exports.moveLayer = function moveLayer(direction, number) {
+  return function (dispatch) {
+    dispatch({ type: MOVE_LAYER, direction: direction, number: number });
     dispatch(saveState());
   };
 };
@@ -26658,6 +26666,28 @@ var layers = function layers() {
           number: layer.number - 1
         });
       })));
+    case MOVE_LAYER:
+      if (action.direction === 'up') {
+        if (action.number === state.length) {
+          return state;
+        }
+        var index = action.number - 1;
+        return [].concat(_toConsumableArray(state.slice(0, index)), [_extends({}, state[index + 1], {
+          number: index + 1
+        }), _extends({}, state[index], {
+          number: index + 2
+        })], _toConsumableArray(state.slice(index + 2)));
+      } else {
+        if (action.number === 1) {
+          return state;
+        }
+        var index = action.number - 1;
+        return [].concat(_toConsumableArray(state.slice(0, index - 1)), [_extends({}, state[index], {
+          number: index
+        }), _extends({}, state[index - 1], {
+          number: index + 1
+        })], _toConsumableArray(state.slice(index + 1)));
+      }
     case ADD_COLUMN:
       return state.map(function (layer) {
         if (layer.number === action.layerNumber) {
@@ -28727,6 +28757,20 @@ var Layer = function (_React$Component) {
             { className: 'pull-right' },
             _react2.default.createElement(
               'button',
+              { className: 'button outline small', onClick: function onClick() {
+                  return _this.props.moveLayer('up');
+                } },
+              'Up'
+            ),
+            _react2.default.createElement(
+              'button',
+              { className: 'button outline small', onClick: function onClick() {
+                  return _this.props.moveLayer('down');
+                } },
+              'Down'
+            ),
+            _react2.default.createElement(
+              'button',
               { className: 'button outline small', onClick: _this.props.deleteLayer },
               'Delete'
             )
@@ -28783,6 +28827,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
     },
     deleteLayer: function deleteLayer() {
       dispatch(actions.deleteLayer(ownProps.number));
+    },
+    moveLayer: function moveLayer(direction) {
+      dispatch(actions.moveLayer(direction, ownProps.number));
     },
     deleteColumn: function deleteColumn(columnNumber) {
       dispatch(actions.deleteColumn(ownProps.number, columnNumber));

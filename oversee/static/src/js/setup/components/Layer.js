@@ -29,6 +29,8 @@ class Layer extends React.Component {
       <div className="card-title">
         Layer {this.props.number}
         <div className="pull-right">
+          <button className="button outline small" onClick={() => this.props.moveLayer('up')}>Up</button>
+          <button className="button outline small" onClick={() => this.props.moveLayer('down')}>Down</button>
           <button className="button outline small" onClick={this.props.deleteLayer}>Delete</button>
         </div>
       </div>
@@ -66,6 +68,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   deleteLayer: () => {
     dispatch(actions.deleteLayer(ownProps.number))
+  },
+  moveLayer: (direction) => {
+    dispatch(actions.moveLayer(direction, ownProps.number))
   },
   deleteColumn: (columnNumber) => {
     dispatch(actions.deleteColumn(ownProps.number, columnNumber))
