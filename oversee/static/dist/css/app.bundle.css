@@ -52,7 +52,13 @@ body {
 
 .grid-column {
   float: left;
-  width: 50%; }
+  width: 20%; }
+  @media only screen and (max-width: 500px) {
+    .grid-column {
+      width: 50%; } }
+  @media only screen and (max-width: 800px) {
+    .grid-column {
+      width: 33.33%; } }
   .grid-column.bordered {
     box-shadow: 0 0 0 2px #7554E9; }
 
