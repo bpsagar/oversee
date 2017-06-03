@@ -25631,7 +25631,71 @@ module.exports = traverseAllChildren;
 /* 252 */,
 /* 253 */,
 /* 254 */,
-/* 255 */,
+/* 255 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(15);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Modal = function (_React$Component) {
+  _inherits(Modal, _React$Component);
+
+  function Modal() {
+    var _ref;
+
+    var _temp, _this, _ret;
+
+    _classCallCheck(this, Modal);
+
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Modal.__proto__ || Object.getPrototypeOf(Modal)).call.apply(_ref, [this].concat(args))), _this), _this.render = function () {
+      return _react2.default.createElement(
+        "div",
+        { className: "modal" },
+        _react2.default.createElement("div", { className: "modal-backdrop", onClick: _this.props.onClose }),
+        _react2.default.createElement(
+          "div",
+          { className: "modal-container" },
+          _react2.default.createElement(
+            "div",
+            { className: "modal-title" },
+            _this.props.title
+          ),
+          _react2.default.createElement(
+            "div",
+            { className: "modal-content" },
+            _this.props.children
+          )
+        )
+      );
+    }, _temp), _possibleConstructorReturn(_this, _ret);
+  }
+
+  return Modal;
+}(_react2.default.Component);
+
+exports.default = Modal;
+
+/***/ }),
 /* 256 */,
 /* 257 */,
 /* 258 */
@@ -25654,11 +25718,21 @@ var _axios = __webpack_require__(95);
 
 var _axios2 = _interopRequireDefault(_axios);
 
+var _AssetCache = __webpack_require__(276);
+
+var _AssetCache2 = _interopRequireDefault(_AssetCache);
+
 var _Layer = __webpack_require__(264);
 
 var _Layer2 = _interopRequireDefault(_Layer);
 
+var _Modal = __webpack_require__(255);
+
+var _Modal2 = _interopRequireDefault(_Modal);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -25681,23 +25755,73 @@ var Screen = function (_React$Component) {
     }
 
     return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Screen.__proto__ || Object.getPrototypeOf(Screen)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
-      layers: []
+      layers: [],
+      contentLoaded: false,
+      loadedAssets: [],
+      status: ''
+    }, _this.getAssetToLoad = function () {
+      var asset = null;
+      _this.state.layers.map(function (layer) {
+        layer.layer.columns.map(function (column) {
+          if (_this.state.loadedAssets.indexOf(column.asset.filename) == -1) {
+            asset = column.asset;
+          }
+        });
+      });
+      return asset;
+    }, _this.loadAsset = function (asset, cb) {
+      _this.setState(_extends({}, _this.state, { status: 'Loading ' + asset.filename }));
+      _AssetCache2.default.load(asset, function () {
+        _this.setState(_extends({}, _this.state, {
+          loadedAssets: [].concat(_toConsumableArray(_this.state.loadedAssets), [asset.filename])
+        }));
+        cb();
+      });
+    }, _this.loadAllAssets = function () {
+      var asset = _this.getAssetToLoad();
+      if (asset === null) {
+        _this.setState(_extends({}, _this.state, { contentLoaded: true }));
+        _this.initInterval();
+      } else {
+        _this.loadAsset(asset, function () {
+          _this.loadAllAssets();
+        });
+      }
     }, _this.fetchScreenAssets = function () {
       _axios2.default.get('/api/screen/assets/').then(function (response) {
         _this.setState(_extends({}, _this.state, { layers: response.data.screen }));
+        _this.loadAllAssets();
       });
-    }, _this.componentDidMount = function () {
-      _this.fetchScreenAssets();
+    }, _this.initInterval = function () {
+      if (_this.intervalId !== null) {
+        return;
+      }
       _this.intervalId = setInterval(function () {
         _this.fetchScreenAssets();
       }, 500);
+    }, _this.componentDidMount = function () {
+      _this.intervalId = null;
+      _this.fetchScreenAssets();
     }, _this.render = function () {
       return _react2.default.createElement(
         'div',
         { className: 'output' },
-        _this.state.layers.map(function (layer) {
-          return _react2.default.createElement(_Layer2.default, _extends({ key: layer.layer_number }, layer));
-        })
+        !_this.state.contentLoaded && _react2.default.createElement(
+          _Modal2.default,
+          { title: 'Loading' },
+          _react2.default.createElement(
+            'div',
+            null,
+            _this.state.status
+          )
+        ),
+        _this.state.contentLoaded && _react2.default.createElement(
+          'div',
+          { className: 'output' },
+          _this.state.layers.map(function (layer) {
+            return _react2.default.createElement(_Layer2.default, _extends({ key: layer.layer_number }, layer));
+          })
+        )
       );
     }, _temp), _possibleConstructorReturn(_this, _ret);
   }
@@ -25731,6 +25855,10 @@ var _react2 = _interopRequireDefault(_react);
 var _axios = __webpack_require__(95);
 
 var _axios2 = _interopRequireDefault(_axios);
+
+var _AssetCache = __webpack_require__(276);
+
+var _AssetCache2 = _interopRequireDefault(_AssetCache);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -25790,9 +25918,11 @@ var Asset = function (_React$Component) {
       }
 
       return style;
+    }, _this.getAssetSource = function () {
+      return _AssetCache2.default.get(_this.props.asset.url);
     }, _this.render = function () {
       if (_this.props.asset.type == 'image') {
-        return _react2.default.createElement('img', { src: _this.props.asset.url });
+        return _react2.default.createElement('img', { src: _this.getAssetSource() });
       }
       if (_this.props.asset.type == 'video') {
         return _react2.default.createElement(
@@ -25802,10 +25932,9 @@ var Asset = function (_React$Component) {
             ref: function ref(dom) {
               _this.asset = dom;
             },
-            style: _this.getStyle(),
-            preload: 'none'
+            style: _this.getStyle()
           },
-          _react2.default.createElement('source', { src: _this.props.asset.url })
+          _react2.default.createElement('source', { src: _this.getAssetSource() })
         );
       }
     }, _temp), _possibleConstructorReturn(_this, _ret);
@@ -25953,6 +26082,56 @@ document.body.addEventListener('click', function () {
   var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
   requestMethod.call(element);
 });
+
+/***/ }),
+/* 266 */,
+/* 267 */,
+/* 268 */,
+/* 269 */,
+/* 270 */,
+/* 271 */,
+/* 272 */,
+/* 273 */,
+/* 274 */,
+/* 275 */,
+/* 276 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _axios = __webpack_require__(95);
+
+var _axios2 = _interopRequireDefault(_axios);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var AssetCache = {
+  cache: {},
+  load: function load(asset, cb) {
+    (0, _axios2.default)({
+      url: asset.url,
+      method: 'get',
+      responseType: 'blob'
+    }).then(function (response) {
+      AssetCache.cache[asset.url] = URL.createObjectURL(response.data);
+      cb();
+    });
+  },
+  get: function get(url) {
+    if (!(url in AssetCache.cache)) {
+      return url;
+    } else {
+      return AssetCache.cache[url];
+    }
+  }
+};
+
+exports.default = AssetCache;
 
 /***/ })
 /******/ ]);

@@ -1,6 +1,8 @@
 import React from 'react'
 import axios from 'axios'
 
+import AssetCache from '../AssetCache'
+
 class Asset extends React.Component {
   state = {
     videoEnded: false
@@ -52,10 +54,14 @@ class Asset extends React.Component {
     return style
   }
 
+  getAssetSource = () => {
+    return AssetCache.get(this.props.asset.url)
+  }
+
   render = () => {
     if (this.props.asset.type == 'image') {
       return (
-        <img src={this.props.asset.url}></img>
+        <img src={this.getAssetSource()}></img>
       )
     }
     if (this.props.asset.type == 'video') {
@@ -65,7 +71,7 @@ class Asset extends React.Component {
           ref={dom => { this.asset = dom }}
           style={this.getStyle()}
         >
-          <source src={this.props.asset.url}></source>
+          <source src={this.getAssetSource()}></source>
         </video>
       )
     }
