@@ -25802,7 +25802,8 @@ var Asset = function (_React$Component) {
             ref: function ref(dom) {
               _this.asset = dom;
             },
-            style: _this.getStyle()
+            style: _this.getStyle(),
+            preload: 'none'
           },
           _react2.default.createElement('source', { src: _this.props.asset.url })
         );
@@ -25884,7 +25885,6 @@ var Layer = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         null,
-        _this.state.currentColumnNumber !== _this.state.nextColumnNumber && _this.state.currentColumnNumber !== null && _this.state.nextColumnNumber !== null && _react2.default.createElement('div', { className: 'output', style: { backgroundColor: 'black' } }),
         _this.props.layer.columns.map(function (column) {
           if (_this.state.currentColumnNumber === column.number) {
             return _react2.default.createElement(

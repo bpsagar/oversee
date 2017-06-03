@@ -1,5 +1,5 @@
 git+https://github.com/drongo-framework/drongo.git
-git+https://github.com/drongo-framework/nest.git
-git+https://github.com/drongo-framework/feathers.git#subdirectory=feathers-jinja2
-git+https://github.com/drongo-framework/feathers.git#subdirectory=feathers-static
+git+https://github.com/drongo-framework/drongo-nest.git
+git+https://github.com/drongo-framework/drongo-wing.git#subdirectory=wing-jinja2
+git+https://github.com/drongo-framework/drongo-wing.git#subdirectory=wing-static
 tinydb==3.2.3

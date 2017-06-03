@@ -34,11 +34,6 @@ class Layer extends React.Component {
   render = () => {
     return (
       <div>
-        {this.state.currentColumnNumber !== this.state.nextColumnNumber &&
-          this.state.currentColumnNumber !== null &&
-          this.state.nextColumnNumber !== null &&
-          <div className="output" style={{backgroundColor: 'black'}}></div>
-        }
         {this.props.layer.columns.map(column => {
           if (this.state.currentColumnNumber === column.number) {
             return (

@@ -26776,8 +26776,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _react = __webpack_require__(15);
 
 var _react2 = _interopRequireDefault(_react);
@@ -26804,35 +26802,38 @@ var Asset = function (_React$Component) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Asset.__proto__ || Object.getPrototypeOf(Asset)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
-      previewURL: null
-    }, _this.componentDidMount = function () {
-      if (_this.props.type == 'video') {
-        var video = document.createElement('video');
-        video.src = _this.props.url;
-        var canvas = document.createElement('canvas');
-        video.addEventListener('loadeddata', function () {
-          var ctx = canvas.getContext('2d');
-          canvas.width = video.videoWidth;
-          canvas.height = video.videoHeight;
-          ctx.drawImage(video, 0, 0);
-          _this.setState(_extends({}, _this.state, { previewURL: canvas.toDataURL() }));
-          video.currentTime = video.duration / 2;
-          video.addEventListener('seeked', function () {
-            ctx.drawImage(video, 0, 0);
-            _this.setState(_extends({}, _this.state, { previewURL: canvas.toDataURL() }));
-          });
-        });
-      }
-    }, _this.render = function () {
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Asset.__proto__ || Object.getPrototypeOf(Asset)).call.apply(_ref, [this].concat(args))), _this), _this.render = function () {
       return _react2.default.createElement(
         'div',
         { className: 'preview-wrapper' },
         _this.props.type == 'image' && _react2.default.createElement('div', { className: 'preview', 'data-name': _this.props.name, style: { backgroundImage: 'url(\'' + _this.props.url + '\')' } }),
-        _this.props.type == 'video' && _react2.default.createElement('div', { className: 'preview', 'data-name': _this.props.name, style: { backgroundImage: 'url(\'' + _this.state.previewURL + '\')' } })
+        _this.props.type == 'video' && _react2.default.createElement('div', { className: 'preview', 'data-name': _this.props.name, style: { backgroundImage: 'url(\'' + _this.props.preview + '\')' } })
       );
     }, _temp), _possibleConstructorReturn(_this, _ret);
   }
+  // state = {
+  //   previewURL: null
+  // }
+  //
+  // componentDidMount = () => {
+  //   if (this.props.type == 'video') {
+  //     var video = document.createElement('video')
+  //     video.src = this.props.url
+  //     var canvas = document.createElement('canvas')
+  //     video.addEventListener('loadeddata', () => {
+  //       var ctx = canvas.getContext('2d')
+  //       canvas.width = video.videoWidth
+  //       canvas.height = video.videoHeight
+  //       ctx.drawImage(video, 0, 0)
+  //       this.setState({...this.state, previewURL: canvas.toDataURL()})
+  //       video.currentTime = video.duration / 2
+  //       video.addEventListener('seeked', () => {
+  //         ctx.drawImage(video, 0, 0)
+  //         this.setState({...this.state, previewURL: canvas.toDataURL()})
+  //       })
+  //     })
+  //   }
+  // }
 
   return Asset;
 }(_react2.default.Component);
@@ -28617,7 +28618,10 @@ var ColumnSettings = function (_React$Component) {
         _this.props.updateProperty('loop', false);
       }
     }, _this.handleLoopPointChange = function (e) {
-      _this.props.updateProperty('loop_point', e.target.value);
+      if (isNaN(e.target.value)) {
+        return;
+      }
+      _this.props.updateProperty('loop_point', parseInt(e.target.value, 10));
     }, _this.render = function () {
       return _react2.default.createElement(
         _Modal2.default,

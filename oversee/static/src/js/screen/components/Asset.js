@@ -55,7 +55,7 @@ class Asset extends React.Component {
   render = () => {
     if (this.props.asset.type == 'image') {
       return (
-        <img src={this.props.asset.url}></img>      
+        <img src={this.props.asset.url}></img>
       )
     }
     if (this.props.asset.type == 'video') {

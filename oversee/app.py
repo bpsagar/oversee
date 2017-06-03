@@ -38,10 +38,11 @@ def assets(ctx):
             'filename': file,
             'name': file.rsplit('.', 1)[0],
             'type': file_type,
-            'url': '/assets/{name}'.format(name=file)
+            'url': '/assets/{name}'.format(name=file),
+            'preview': '/assets/previews/{name}.jpg'.format(name=file)
         })
     ctx.response.set_json({
-        'assets': assets
+        'assets': sorted(assets, key=lambda x: x['name'])
     })
 
 

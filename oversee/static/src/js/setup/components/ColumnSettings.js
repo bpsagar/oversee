@@ -26,7 +26,10 @@ class ColumnSettings extends React.Component {
   }
 
   handleLoopPointChange = (e) => {
-    this.props.updateProperty('loop_point', e.target.value)
+    if (isNaN(e.target.value)) {
+      return;
+    }
+    this.props.updateProperty('loop_point', parseInt(e.target.value, 10))
   }
 
   render = () => (
