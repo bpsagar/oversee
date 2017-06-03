@@ -1,5 +1,5 @@
-from feathers_jinja2 import Jinja2
-from feathers_static import Static
+from wing_jinja2 import Jinja2
+from wing_static import Static
 from tinydb import TinyDB
 import os
 
